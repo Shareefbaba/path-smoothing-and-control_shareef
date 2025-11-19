@@ -70,7 +70,27 @@ With this Action Graph, the robot can:
 
 In simple terms: this Action Graph connects Isaac Sim and ROS2, so the robot can move, publish odometry, and work with my controller pipeline.
 
-#
+# path Smoothing and time-parameterization
+Path smoothing takes the raw discrete waypoints and converts them into a smooth, continuous curve that the robot can follow without sudden turns or sharp changes. In my project, I used the "Centripetal Catmull–Rom Spline", which naturally passes through all waypoints and produces a smooth path with controlled curvature.
+
+Once the smooth path is generated, time-parameterization is applied. This assigns a timestamp to every point along the path based on a chosen velocity. It converts the geometric path into a time-based trajectory, where each point has:
+
+(x, y, t)
+
+
+This makes it possible for the controller to follow the path at a consistent speed and compute how fast the robot should move at each step.
+
+In simple terms:
+Path smoothing makes the path smooth, and time-parameterization assigns time to each point so the robot knows when to be where. 
+[the codes are availabe here ](tenx_assignment/utils).
+
+and can you see the plot it easily understandable below image
+<img width="1005" height="501" alt="Screenshot from 2025-11-19 12-47-42" src="https://github.com/user-attachments/assets/b4801066-d2ba-4638-8ab9-39e9c9fb0541" />  <img width="1010" height="483" alt="Screenshot from 2025-11-20 02-00-12" src="https://github.com/user-attachments/assets/f3f0d143-089f-4287-8b39-85c799aacbbe" />
+
+
+
+
+
 
    
 

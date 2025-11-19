@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>tenx_assignment</name>
+  <version>0.0.0</version>
+  <description>project</description>
+  <maintainer email="shareef@todo.todo">shareef</maintainer>
+  <license>Apache-2.0</license>
+
+  <!-- build tool -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <!-- if using ament_python -->
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <!-- build/runtime dependencies -->
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_msgs</depend>
+
+  <!-- optional tools you may run from launch file -->
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>ros_gz_sim</exec_depend> <!-- if you use Gazebo/ros_gz_sim -->
+
+  <!-- testing / other -->
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <!-- ament_python requirement -->
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

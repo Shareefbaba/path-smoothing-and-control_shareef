@@ -1,0 +1,36 @@
+cmake_minimum_required(VERSION 3.8)
+project(tenx_assignment)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+find_package(ament_cmake REQUIRED)
+find_package(ament_python REQUIRED)
+
+# Install Python package (expects setup.py / setup.cfg present)
+ament_python_install_package(${PROJECT_NAME})
+
+# Install helper scripts (make sure scripts/ exists and files are executable)
+install(PROGRAMS
+  scripts/traj_to_path.py
+  DESTINATION lib/${PROJECT_NAME}
+  OPTIONAL
+)
+
+# Install launch and other share files for ros2 launch to find
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
+# Optional: rviz, urdf, meshes (only if present)
+install(DIRECTORY
+  rviz
+  urdf
+  meshes
+  DESTINATION share/${PROJECT_NAME}
+  OPTIONAL
+)
+
+ament_package()

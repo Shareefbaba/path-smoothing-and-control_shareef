@@ -87,6 +87,59 @@ Path smoothing makes the path smooth, and time-parameterization assigns time to 
 and can you see the plot it easily understandable below image
 <img width="1005" height="501" alt="Screenshot from 2025-11-19 12-47-42" src="https://github.com/user-attachments/assets/b4801066-d2ba-4638-8ab9-39e9c9fb0541" />  <img width="1010" height="483" alt="Screenshot from 2025-11-20 02-00-12" src="https://github.com/user-attachments/assets/f3f0d143-089f-4287-8b39-85c799aacbbe" />
 
+# ROS2 Nodes for Path Smoothing, Trajectory Generation, and Control
+ROS2 Nodes Overview
+
+To run the full motion pipeline, I created several ROS2 nodes. Each node is modular and handles one specific part of the project: smoothing the raw path, generating a time-based trajectory, and controlling the robot to follow it.
+
+1. Path Smoother Node
+
+[file location](tenx_assignment/nodes/path_smoother_node.py)
+This node takes the raw 2D waypoints and applies the Centripetal Catmull–Rom Spline to generate a smooth path.
+It publishes the smoothed path as a list of (x, y) points.
+
+2. Trajectory Generator Node
+
+File: tenx_assignment/nodes/trajectory_generator_node.py
+This node receives the smoothed path and performs time-parameterization.
+It assigns timestamps to each point and publishes a time-based trajectory in the form:
+
+(x, y, t)
+
+3. Trajectory Controller Node
+
+[file location](tenx_assignment/nodes/trajectory_generator_node.py)
+This node reads the time-parameterized trajectory and computes the required linear and angular velocities for the robot.
+It uses a Pure-Pursuit Controller, and publishes /cmd_vel that sends commands to Isaac Sim.
+
+4. Path Publisher Node (optional for testing)
+
+File: tenx_assignment/nodes/path_publisher_node.py
+Used to publish a test set of waypoints without needing a separate script.
+
+5. Trajectory to Path Node
+
+[file location](tenx_assignment/nodes/trajectory_controller_node.py)
+Converts (x, y, t) back into a nav_msgs/Path message so you can visualize the trajectory in RViz2.
+
+How the Nodes Work Together
+raw_waypoints  
+     ↓
+Path Smoother Node  
+     ↓
+smoothed_path  
+     ↓
+Trajectory Generator Node  
+     ↓
+time_parameterized_trajectory  
+     ↓
+Controller Node  
+     ↓
+/cmd_vel → Isaac Sim Robot
+
+
+
+
 
 
 

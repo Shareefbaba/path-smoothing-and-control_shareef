@@ -10,4 +10,7 @@ This project focuses on designing and implementing a complete trajectory trackin
 - **Isaac Sim version 5.0.0**
   - ROS2 Bridge extension enabled
 
-# Isaac
+# Robot Setup in Isaac sim
+In isaac sim i setup the warehouse environment and Imported Turtlebot3_burger mobile robot.
+you can refer [Turtlebot3_burger](isaacsim/urdf/turtlebot3_burger.)
+

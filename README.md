@@ -201,6 +201,14 @@ ros2 launch tenx_assignment test.launch.py
 
 This automatically starts the path smoother, trajectory generator, and controller. At this point, I can switch back to Isaac Sim and see the robot begin to move along the planned path.
 
+<img width="2560" height="1440" alt="Screenshot from 2025-11-20 05-45-07" src="https://github.com/user-attachments/assets/e7c49c3d-3596-477c-8d68-fcd7a09bd401" />
+
+<img width="2560" height="1440" alt="Screenshot from 2025-11-20 05-45-12" src="https://github.com/user-attachments/assets/321b4bbe-e27e-4b3c-9f5d-6bf3d66467b1" />
+
+
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/b958dc1e-fdf6-4ba1-9de8-0c4699d1c401" />
+
+
 To visualize the results more clearly, I also open RViz2:
 
 rviz2
@@ -209,6 +217,38 @@ rviz2
 In RViz, I add displays for /path_smoothed, /trajectory, /odom, and /tf.
 This lets me monitor the smoothed path, the time-parameterized trajectory, and the robot’s actual movement.
 
+
+<img width="2560" height="1440" alt="Screenshot from 2025-11-19 03-22-03" src="https://github.com/user-attachments/assets/f074cd4e-9b43-4cc6-9d53-ade8752fd49a" />
+
+<img width="2560" height="1440" alt="Screenshot from 2025-11-19 03-02-46" src="https://github.com/user-attachments/assets/ed63dc5c-ada6-452a-9a97-39d022ce9e55" />
+
+# My design choices, algorithms, architectural decisions
+
+## Design Choices
+
+For this project, I tried to keep the overall structure simple and easy to work with. I separated each part of the system into its own ROS2 node so that path smoothing, trajectory generation, and control would not interfere with each other. This made it easier to test each piece on its own. I also chose Python nodes because it allowed me to make quick changes and rebuild instantly, which saved a lot of time during development. Isaac Sim handled all the low-level simulation and physics, while ROS2 handled the logic, so the two sides stayed cleanly separated.
+
+## Algorithms
+
+For smoothing the waypoints, I used the Centripetal Catmull–Rom spline because it produces a smooth curve that passes directly through the original points without creating sharp bends. After smoothing the path, I used a simple time-parameterization approach based on the path length, which lets me assign a timestamp to every point on the path. This converts the path into a usable trajectory. For tracking, I chose a Pure-Pursuit style controller. It’s straightforward, works well for differential-drive robots, and is easy to tune. The controller looks ahead on the trajectory and generates the linear and angular velocity commands needed to follow it.
+
+## Architectural Decisions
+
+I designed the system so each ROS2 node has one clear job. The smoother publishes a clean path, the generator adds timing information, and the controller reads the trajectory together with odometry from Isaac Sim and sends /cmd_vel commands back. Isaac Sim’s ROS2 bridge takes care of publishing /odom, /tf, and /clock, so everything stays synchronized with the simulator. The launch file puts all nodes together and makes the whole pipeline easy to run. This structure makes the system stable, easy to understand, and easy to extend later if I want to add obstacle avoidance or switch to a different controller.
+
+# extend this to a real robot
+
+To extend this system from simulation to a real autonomous robot, I would keep the same overall ROS2 pipeline but replace the simulated components with real hardware and sensors. Instead of Isaac Sim providing odometry and wheel control, the robot would use wheel encoders, an IMU, and a LiDAR or depth camera for perception and localization. These sensors would be fused using packages like robot_localization to generate stable /odom and /tf data. The /cmd_vel commands produced by my tracking controller would be sent to a real motor driver or a ros2_control velocity controller to move the robot. With these additions, the robot would be able to follow the generated trajectory fully autonomously, making decisions based on live sensor feedback and adapting its motion in real environments. Safety features like watchdog timers, speed limits, emergency stop, and proper calibration of wheel radius and wheelbase would be added to ensure reliable behavior on hardware. With these changes, the trajectory pipeline—path smoothing, time-parameterization, and control—would work the same way on a physical robot as in simulation.
+
+# Brief on the AI tools used 
+
+I worked closely with ChatGPT throughout this project, mainly because I had only two days to complete everything and wanted to make sure the code was clean, correct, and well structured. I wrote all the core logic myself — the path smoothing, trajectory generation, controller nodes, and launch setup — and then used ChatGPT and Grok to refine the code, fix issues faster, and improve the overall design. I’m comfortable with Linux, ROS2, and Isaac Sim, but coming from a mechanical engineering background, I’m still building my confidence in coding. Using AI helped me stay productive, avoid getting stuck, and complete the project at a much faster pace. The ideas, testing, debugging, and final integration in Isaac Sim were done by me, but AI tools acted like an assistant that helped me polish and speed up the work.
+
+# Extra Credit: How I Would Extend This to Avoid Obstacles
+
+To extend this system with obstacle avoidance, I would add a local planning and perception layer on top of the existing trajectory-following pipeline. The robot would use a LiDAR or depth camera to detect obstacles in real time and build a local costmap around itself. A small local planner—such as a DWA-based velocity planner or a simple reactive safety layer—would sit between the controller and the motor commands. This planner would check the planned path against incoming sensor data and adjust the robot’s velocity if an obstacle appears. If the obstacle blocks the path, the robot could slow down, stop, or re-route around it while still trying to follow the global trajectory as closely as possible. This approach works well because it preserves the global planning pipeline while adding intelligence and safety at the local level.
+
+In a real robot, this would be implemented using LiDAR scans, depth images, or 3D point clouds to detect obstacles. Since I previously worked with LiDARs and sensors in my past job, I’m comfortable interpreting scan data, creating basic costmaps, and integrating perception into a ROS2 system. With that experience, I would use sensor fusion tools like robot_localization and then feed the fused odometry and LiDAR scans into a local planner to generate safe, collision-free /cmd_vel commands. This would allow the robot to move autonomously in more complex environments, avoid collisions, and adapt its motion based on real-time sensor input.
 
 
 

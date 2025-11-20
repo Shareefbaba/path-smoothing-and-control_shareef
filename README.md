@@ -250,7 +250,11 @@ To extend this system with obstacle avoidance, I would add a local planning and 
 
 In a real robot, this would be implemented using LiDAR scans, depth images, or 3D point clouds to detect obstacles. Since I previously worked with LiDARs and sensors in my past job, I’m comfortable interpreting scan data, creating basic costmaps, and integrating perception into a ROS2 system. With that experience, I would use sensor fusion tools like robot_localization and then feed the fused odometry and LiDAR scans into a local planner to generate safe, collision-free /cmd_vel commands. This would allow the robot to move autonomously in more complex environments, avoid collisions, and adapt its motion based on real-time sensor input.
 
+# Conclusion
 
+This project allowed me to build a complete motion pipeline for a mobile robot using ROS2—from smoothing raw waypoints to generating a time-parameterized trajectory and finally controlling the robot to follow it inside Isaac Sim. By structuring each step as an independent node, I was able to keep the system modular, easy to test, and easy to extend. Seeing the robot follow the trajectory in simulation, with RViz visualizing the path, trajectory, and odometry, confirmed that the overall design works as expected and that the integration between ROS2 and Isaac Sim was successful.
+
+Overall, this project helped me strengthen my understanding of motion planning, control, and simulation while improving my coding workflow using tools like ChatGPT. With my previous experience working on LiDARs and sensors, I can clearly see how this pipeline can be expanded further into real-world autonomy by adding obstacle avoidance, local planning, and hardware interfaces. The work here forms a solid foundation for future development on both simulated and physical robots.
 
 
 

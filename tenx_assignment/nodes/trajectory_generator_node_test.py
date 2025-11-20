@@ -62,11 +62,10 @@ class TrajectoryGeneratorNode(Node):
         # default waypoints
         self.default_waypoints = [
             (0.0, 0.0),
-            (1.0, 2.0),
-            (3.0, 3.0),
-            (4.0, 0.5),
-            (6.0, 2.0),
-            (7.0, 0.0)
+            (-2.45, 1.54),
+            (-3.7, 4.02),
+            (-7.0, 0.0),
+            (-7.3, 13.7)
         ]
 
         self._published = False

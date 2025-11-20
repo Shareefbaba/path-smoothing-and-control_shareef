@@ -147,7 +147,34 @@ Controller Node
      ↓
 /cmd_vel → Isaac Sim Robot
 
+# Launch File
 
+[Launch File](tenx_assignment/launch/test.launch.py)
+
+The launch file is used to start all the required ROS2 nodes for this project in a single command. Instead of running each node manually, the launch file groups them together and handles all parameters, topic names, and node startup order.
+
+Purpose of the Launch File
+
+The launch file:
+
+* Starts the Path Smoother Node
+
+* Starts the Trajectory Generator Node
+
+* Starts the Tracking Controller Node
+
+* Starts the Path Publisher Node (optional, for testing)
+
+* Configures parameters (if needed)
+
+Ensures all nodes use simulation time (use_sim_time=true)
+
+Sets namespaces and topic remappings (if required)
+
+In simple terms:
+
+👉 The launch file is the central script that starts the entire pipeline:
+Path Smoothing → Trajectory Generation → Trajectory Tracking.
 
 
 

@@ -176,6 +176,39 @@ In simple terms:
 👉 The launch file is the central script that starts the entire pipeline:
 Path Smoothing → Trajectory Generation → Trajectory Tracking.
 
+# Simulation 
+
+To run the simulation, I first open Isaac Sim and load the Warehouse environment. After that, I press Play to start physics, because the robot will only respond to ROS2 commands when the physics engine is running.
+
+Once physics is active, I check whether Isaac Sim is publishing ROS2 topics correctly. I open a terminal and run:
+
+ros2 topic list
+
+
+If I can see topics like /odom, /joint_states, /tf, and /clock, it confirms that the ROS2 Bridge extension inside Isaac Sim is working properly.
+
+Next, I build my ROS2 workspace:
+
+cd ~/ros2_ws
+colcon build --symlink-install
+source install/setup.bash
+
+
+After sourcing the workspace, I launch the entire pipeline using my launch file:
+
+ros2 launch tenx_assignment test.launch.py
+
+
+This automatically starts the path smoother, trajectory generator, and controller. At this point, I can switch back to Isaac Sim and see the robot begin to move along the planned path.
+
+To visualize the results more clearly, I also open RViz2:
+
+rviz2
+
+
+In RViz, I add displays for /path_smoothed, /trajectory, /odom, and /tf.
+This lets me monitor the smoothed path, the time-parameterized trajectory, and the robot’s actual movement.
+
 
 
 
